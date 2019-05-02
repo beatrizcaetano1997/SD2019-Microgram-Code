@@ -49,13 +49,18 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		if(users.get(userId) != null) {
-			for(String id : followers.get(userId)) {
+		Profile res = users.get(userId);
+		if(res != null) {
+			for(String id : followers.keySet()) {
+				if(followers.get(id).contains(userId)) {
 				followers.get(id).remove(userId);
+				}
 			}
 			
-			for(String id : following.get(userId)) {
+			for(String id : following.keySet()) {
+				if(following.get(id).contains(userId)) {
 				following.get(id).remove(userId);
+				}
 			}
 			
 			users.remove(userId);
@@ -63,8 +68,9 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 			following.remove(userId);
 			return ok();
 		}
-		else
+		else {
 			return Result.error(ErrorCode.NOT_FOUND);
+		}
 	}
 	
 	@Override

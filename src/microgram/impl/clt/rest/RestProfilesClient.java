@@ -70,7 +70,7 @@ public abstract class RestProfilesClient extends RestClient implements Profiles 
 		
 	}
 	
-	public Result<Void> deleteProfile(String userId){
+	public Result<Void> deleteProfile(@PathParam("userId")String userId){
 		Response r = target.path(userId)
 				.request()
 				.delete();
