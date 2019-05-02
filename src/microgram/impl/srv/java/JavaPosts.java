@@ -42,13 +42,13 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		if(posts.get(postId) != null) {
-			userPosts.remove(posts.get(postId).getOwnerId());
+		if (posts.get(postId) != null) {
+			userPosts.get((posts.get(postId)).getOwnerId()).remove(postId);
 			posts.remove(postId);
-		}
-		else	
-			return Result.error(ErrorCode.NOT_IMPLEMENTED);
-		return null;
+			likes.remove(postId);
+			return ok();
+		} else
+			return Result.error(ErrorCode.NOT_FOUND);
 	}
 
 	@Override
@@ -109,13 +109,13 @@ public class JavaPosts implements Posts {
 	public Result<List<String>> getFeed(String userId) {
 		URI[] servers;
 		List<String> feedList = new ArrayList<String>();
-		
+
 		try {
 			servers = Discovery.findUrisOf("Microgram-Profiles", 1);
 			RestProfilesClient clientFeed = new RestProfilesClient(servers[0]) {
 			};
-			
-			if(clientFeed.getProfile(userId).isOK()) {
+
+			if (clientFeed.getProfile(userId).isOK()) {
 				for (String id : userPosts.keySet()) {
 					Result<Boolean> r = clientFeed.isFollowing(userId, id);
 					if (r.value()) {
@@ -123,19 +123,16 @@ public class JavaPosts implements Posts {
 							feedList.add(postid);
 						}
 					}
-
 				}
-			}
-			
-			else {
+			} else {
 				return error(NOT_FOUND);
 			}
 		}
-		
-		catch(IOException e){
+
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return ok(feedList);
 	}
 }

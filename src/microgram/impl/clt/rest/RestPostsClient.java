@@ -25,7 +25,6 @@ public abstract class RestPostsClient extends RestClient implements Posts {
 	public Result<String> createPost(Post post) {
 		Response r = target
 				.request()
-				.accept(MediaType.APPLICATION_JSON)
 				.post( Entity.entity( post, MediaType.APPLICATION_JSON));
 		
 		return super.responseContents(r, Status.OK, new GenericType<String>(){});	

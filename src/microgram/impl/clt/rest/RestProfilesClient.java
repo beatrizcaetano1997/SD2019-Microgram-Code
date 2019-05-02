@@ -53,7 +53,7 @@ public abstract class RestProfilesClient extends RestClient implements Profiles 
 	}
 	
 	public Result<Void> follow(String userId1, String userId2, boolean isFollowing){
-		Response r = target.path(userId1 + "/ following /" + userId2)
+		Response r = target.path(userId1 + "/following/" + userId2)
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
@@ -62,7 +62,7 @@ public abstract class RestProfilesClient extends RestClient implements Profiles 
 	}
 	
 	public Result<Boolean> isFollowing(String userId1, String userId2){
-		Response r = target.path(userId1 + "/ following /" + userId2)
+		Response r = target.path(userId1 + "/following/" + userId2)
 				.request()
 				.get();
 		
